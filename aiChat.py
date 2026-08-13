@@ -142,8 +142,7 @@ with st.bottom:
                           "content": f"translate the following question to english if it is not already, and fix any major spelling mistakes: {question}"}]
             fixed_question = client.chat.completions.create(model=MODEL, messages=translate).choices[0].message.content
             #st.write(fixed_question)
-            if st.button("clear history"):
-                st.session_state.messages.clear()
+        history = st.checkbox("use chat history?")
     with col2:
         st.space()
         if st.button("send") and question:
@@ -171,10 +170,14 @@ with st.bottom:
                         {"role": "user", "content": f"DOCUMENT CONTEXT:\n{context}\n\nQUESTION:\n{question}"}]
             st.session_state.messages.append(messages[0])
             st.session_state.messages.append(messages[1])
-            response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages)
-            #st.write(response.choices[0].message.content)
+            if history:
+                response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages)
+            else:
+                respose = client.chat.completions.create(model=MODEL, messages=messages)
             st.session_state.messages.append({"role":"assistant", "content":response.choices[0].message.content})
         st.write(fixed_question)
+    if st.button("clear history"):
+        st.session_state.messages.clear()
 for message in st.session_state.messages:
     if message["role"] == "assistant":
         with st.chat_message(message["role"]):
