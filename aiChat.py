@@ -40,76 +40,76 @@ with st.sidebar:
         st.write("collection reset")
         st.write(st.session_state.collection)
 
-types = [
-    "txt",
-    "md",
-    "rst",
-    "py",
-    "js",
-    "html",
-    "css",
-    "json",
-    "xml",
-    "csv",
-    "yaml",
-    "ini",
-    "conf",
-    "env",
-    "svg",
-    "pdf"
-]
-files = st.file_uploader("give file", type=types, accept_multiple_files=True)
-if files:
-    for file in files:
-        st.write(file.name)
-        st.write(file.type)
-        if file.type == "text/plain":
-            st.write(":skull:")
-if files and st.button("process file"):
-    for file in files:
-        st.write("file processed")
-        t_types = {
-            "text/plain",
-            "text/markdown",
-            "text/x-rst",
-            "text/x-python",
-            "text/javascript",
-            "text/html",
-            "text/css",
-            "application/json",
-            "application/xml",
-            "text/csv",
-            "application/x-yaml",
-            "text/x-ini",
-            "image/svg+xml"
-        }
-        if file.type in t_types:
-            text = file.read().decode("utf-8")
-        elif file.type == "application/pdf":
-            reader = PdfReader(file)
-            text = ""
-            for page in reader.pages:
-                text += page.extract_text() + "\n"
-        #highly customisable
-        chunks = []
-        print(len(text))
-        print(len(chunks))
-        #chunk_size = 200
-        #overlap = 50
-        #step = chunk_size - overlap
-        for i in range(0, len(text), st.session_state.step):
-            chunks.append(text[i: i + st.session_state.chunk_size])
-        print(len(chunks), "chunks: ")
-        for x in chunks:
-            print(x)
-        st.write(len(chunks))
-        tags = [file.name + str(i) for i in range(len(chunks))] #add file labeling
-        #st.session_state.collection.add(documents=chunks, ids=tags)
-        collection = st.session_state.client.create_collection(file.name)
-        collection.add(documents=chunks, ids=tags)
-        st.session_state.collections.append(collection)
-        st.write("chunks added")
-with st.sidebar:
+    types = [
+        "txt",
+        "md",
+        "rst",
+        "py",
+        "js",
+        "html",
+        "css",
+        "json",
+        "xml",
+        "csv",
+        "yaml",
+        "ini",
+        "conf",
+        "env",
+        "svg",
+        "pdf"
+    ]
+    files = st.file_uploader("give file", type=types, accept_multiple_files=True)
+    if files:
+        for file in files:
+#            st.write(file.name)
+#            st.write(file.type)
+#            if file.type == "text/plain":
+#                st.write(":skull:")
+    if files and st.button("process file"):
+        for file in files:
+            st.write("file processed")
+            t_types = {
+                "text/plain",
+                "text/markdown",
+                "text/x-rst",
+                "text/x-python",
+                "text/javascript",
+                "text/html",
+                "text/css",
+                "application/json",
+                "application/xml",
+                "text/csv",
+                "application/x-yaml",
+                "text/x-ini",
+                "image/svg+xml"
+            }
+            if file.type in t_types:
+                text = file.read().decode("utf-8")
+            elif file.type == "application/pdf":
+                reader = PdfReader(file)
+                text = ""
+                for page in reader.pages:
+                    text += page.extract_text() + "\n"
+            #highly customisable
+            chunks = []
+            print(len(text))
+            print(len(chunks))
+            #chunk_size = 200
+            #overlap = 50
+            #step = chunk_size - overlap
+            for i in range(0, len(text), st.session_state.step):
+                chunks.append(text[i: i + st.session_state.chunk_size])
+            print(len(chunks), "chunks: ")
+            for x in chunks:
+                print(x)
+            st.write(len(chunks))
+            tags = [file.name + str(i) for i in range(len(chunks))] #add file labeling
+            #st.session_state.collection.add(documents=chunks, ids=tags)
+            collection = st.session_state.client.create_collection(file.name)
+            collection.add(documents=chunks, ids=tags)
+            st.session_state.collections.append(collection)
+            st.write("chunks added")
+
     if files:
         for collection in st.session_state.collections:
             coll = collection.get()
@@ -143,7 +143,7 @@ with st.bottom:
                 que = fixed_question
             else:
                 que = question
-            st.write(que)
+            #st.write(que)
             collection = st.session_state.collection
             result = collection.query(query_texts=que, n_results=10)
             # st.session_state.context = result["documents"][0][::-1] #add thresholding
