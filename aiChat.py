@@ -109,55 +109,18 @@ if files and st.button("process file"):
         collection.add(documents=chunks, ids=tags)
         st.session_state.collections.append(collection)
         st.write("chunks added")
-if files:
-    for collection in st.session_state.collections:
-        coll = collection.get()
-        if st.checkbox(f"use {collection.name}"):
-            if collection not in st.session_state.used_files:
-                st.session_state.used_files.append(collection)
-                st.session_state.collection.add(documents=coll["documents"], ids=coll["ids"])
-        else:
-            if collection in st.session_state.used_files:
-                st.session_state.used_files.remove(collection)
-                st.session_state.collection.delete(ids=coll["ids"])
-
-question = st.text_input("question")
-fix = st.checkbox(f"fix?")
-if fix:
-    translate = [{"role": "system",
-                  "content": "if nothing is wrong do not change anything. do not add anything, just return the fixed question by itself. use the closest word when translating."},
-                 {"role": "user",
-                  "content": f"translate the following question to english if it is not already, and fix any major spelling mistakes: {question}"}]
-    fixed_question = client.chat.completions.create(model=MODEL, messages=translate).choices[0].message.content
-    st.write(fixed_question)
-
-if st.button("search"):
-    if fix:
-        que = fixed_question
-    else:
-        que = question
-    st.write(que)
-    collection = st.session_state.collection
-    result = collection.query(query_texts=que, n_results=10)
-    #st.session_state.context = result["documents"][0][::-1] #add thresholding
-    st.session_state.context = []
-    for i in range(len(result["documents"][0])):
-        if result["distances"][0][i] < 1.4:
-            st.session_state.context.append(result["documents"][0][i])
-    st.session_state.distances = result["distances"][0]
-    st.session_state.question = que
-    for ans in st.session_state.context:
-        st.write(ans)
-    st.write(st.session_state.distances)
-    context = "\n".join(st.session_state.context)
-    question = st.session_state.question
-    messages = [{"role": "system", "content": "Answer the user's question using only the provided document context.If the context contains enough information to answer, give the answer."},
-         {"role": "user", "content": f"DOCUMENT CONTEXT:\n{context}\n\nQUESTION:\n{question}"}]
-    #st.session_state.messages.append({"role":"user", "content": messages})
-    response = client.chat.completions.create(model=MODEL, messages=messages)
-    st.write(response.choices[0].message.content)
-if st.button("clear history"):
-    st.session_state.messages.clear()
+with st.sidebar:
+    if files:
+        for collection in st.session_state.collections:
+            coll = collection.get()
+            if st.checkbox(f"use {collection.name}"):
+                if collection not in st.session_state.used_files:
+                    st.session_state.used_files.append(collection)
+                    st.session_state.collection.add(documents=coll["documents"], ids=coll["ids"])
+            else:
+                if collection in st.session_state.used_files:
+                    st.session_state.used_files.remove(collection)
+                    st.session_state.collection.delete(ids=coll["ids"])
 
 with st.bottom:
     col1, col2 = st.columns(2)
@@ -171,6 +134,8 @@ with st.bottom:
                           "content": f"translate the following question to english if it is not already, and fix any major spelling mistakes: {question}"}]
             fixed_question = client.chat.completions.create(model=MODEL, messages=translate).choices[0].message.content
             st.write(fixed_question)
+            if st.button("clear history"):
+                st.session_state.messages.clear()
     with col2:
         st.space()
         if st.button("send") and question:
@@ -188,9 +153,9 @@ with st.bottom:
                     st.session_state.context.append(result["documents"][0][i])
             st.session_state.distances = result["distances"][0]
             st.session_state.question = que
-            for ans in st.session_state.context:
-                st.write(ans)
-            st.write(st.session_state.distances)
+            #for ans in st.session_state.context:
+            #    st.write(ans)
+            #st.write(st.session_state.distances)
             context = "\n".join(st.session_state.context)
             question = st.session_state.question
             messages = [{"role": "system",
@@ -201,11 +166,7 @@ with st.bottom:
             response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages)
             #st.write(response.choices[0].message.content)
             st.session_state.messages.append({"role":"assistant", "content":response.choices[0].message.content})
-#with st.chat_message("user"):
-#    st.session_state.question
-#with st.chat_message("bot"):
-#    if st.session_state.messages[-1]["role"] == "assistant":
-#        st.session_state.messages[-1]["content"]
+
 for message in st.session_state.messages:
     if message["role"] == "assistant":
         with st.chat_message(message["role"]):
