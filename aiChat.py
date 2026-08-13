@@ -199,4 +199,9 @@ with st.bottom:
             st.session_state.messages.append(messages[0])
             st.session_state.messages.append(messages[1])
             response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages)
-            st.write(response.choices[0].message.content)
+            #st.write(response.choices[0].message.content)
+            st.session_state.messages.append({"role":"assistant", "content":response.choices[0].message.content})
+with st.chat_message("user"):
+    st.session_state.question
+with st.chat_message("bot"):
+    st.session_state.messages[-1]["content"]
