@@ -42,7 +42,8 @@ with (st.sidebar):
         st.session_state.collections = []
         st.session_state.processed = []
         st.session_state.used_files = []
-        st.write("collection reset")
+        st.toast("collection reset")
+        st.rerun()
         #st.write(st.session_state.collection)
 
     types = [
@@ -125,8 +126,9 @@ with (st.sidebar):
             st.session_state.collections = []
             st.session_state.processed = []
             st.session_state.used_files = []
-            st.write("collection reset")
+            st.toast("collection reset")
             #st.write(st.session_state.collection)
+            st.rerun()
 with st.bottom:
     col1, col2 = st.columns(2)
     fixed_question = ""
