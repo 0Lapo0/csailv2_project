@@ -5,7 +5,8 @@ from pypdf import PdfReader
 
 API_KEY = st.secrets["GROQ_API_KEY"]
 client = Groq(api_key=API_KEY)
-MODEL = "openai/gpt-oss-120b"
+models = ("qwen2.5:0.5b", "qwen2.5:7b", "qwen2.5:3b")
+MODEL = st.sidebar.selectbox("choose model", models)
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -142,7 +143,7 @@ with st.bottom:
                           "content": f"translate the following question to english if it is not already, and fix any major spelling mistakes: {question}"}]
             fixed_question = client.chat.completions.create(model=MODEL, messages=translate).choices[0].message.content
             #st.write(fixed_question)
-        history = st.checkbox("use chat history?")
+        history = st.checkbox("use chat history? (might take longer to asnwer)")
     with col2:
         st.space()
         if st.button("send") and question:
