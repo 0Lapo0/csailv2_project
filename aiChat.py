@@ -166,7 +166,7 @@ with st.bottom:
             context = "\n".join(st.session_state.context)
             question = st.session_state.question
             messages = [{"role": "system",
-                         "content": "Answer the user's question using only the provided document context.If the context contains enough information to answer, give the answer. use previous answers as a way to understand the question, but do not use any previous context as a source to answer a question."},
+                         "content": "Answer the user's question using only the provided document context.If the context contains enough information to answer, give the answer. use previous answers as a way to understand the question, but do not use any previous context as a source to answer a question that does not directly ask about a previous question.."},
                         {"role": "user", "content": f"DOCUMENT CONTEXT:\n{context}\n\nQUESTION:\n{question}"}]
             st.session_state.messages.append(messages[0])
             st.session_state.messages.append(messages[1])
@@ -176,8 +176,8 @@ with st.bottom:
                 respose = client.chat.completions.create(model=MODEL, messages=messages)
             st.session_state.messages.append({"role":"assistant", "content":response.choices[0].message.content})
         st.write(fixed_question)
-    if st.button("clear history"):
-        st.session_state.messages.clear()
+        if st.button("clear history"):
+            st.session_state.messages.clear()
 for message in st.session_state.messages:
     if message["role"] == "assistant":
         with st.chat_message(message["role"]):
