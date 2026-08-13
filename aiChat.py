@@ -125,6 +125,7 @@ with st.sidebar:
 
 with st.bottom:
     col1, col2 = st.columns(2)
+    fixed_question = ""
     with col1:
         question = st.text_input("wanna chat?")
         fix = st.checkbox("fix the question?")
