@@ -12,6 +12,10 @@ if "messages" not in st.session_state:
 if "client" not in st.session_state:
     st.session_state.client = chromadb.Client()
 if "collection" not in st.session_state:
+    try:
+        st.session_state.client.delete_collection("documents")
+    except:
+        pass
     c = st.session_state.client.create_collection("documents")
     st.session_state.collection = c.name
 if "collections" not in st.session_state:
