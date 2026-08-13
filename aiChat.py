@@ -137,7 +137,7 @@ with st.bottom:
             if st.button("clear history"):
                 st.session_state.messages.clear()
     with col2:
-        st.write(fixed_question)
+        st.empty()
         if st.button("send") and question:
             if fix:
                 que = fixed_question
@@ -166,7 +166,7 @@ with st.bottom:
             response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages)
             #st.write(response.choices[0].message.content)
             st.session_state.messages.append({"role":"assistant", "content":response.choices[0].message.content})
-
+        st.write(fixed_question)
 for message in st.session_state.messages:
     if message["role"] == "assistant":
         with st.chat_message(message["role"]):
