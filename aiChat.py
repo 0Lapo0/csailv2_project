@@ -45,6 +45,7 @@ with st.sidebar:
         st.session_state.collection = st.session_state.client.create_collection("documents")
         st.session_state.collections = []
         st.session_state.processed = []
+        st.session_state.used_files = []
         st.write("collection reset")
         st.write(st.session_state.collection)
 
@@ -128,6 +129,7 @@ with st.sidebar:
             st.session_state.collection = st.session_state.client.create_collection("documents")
             st.session_state.collections = []
             st.session_state.processed = []
+            st.session_state.used_files = []
             st.write("collection reset")
             st.write(st.session_state.collection)
 with st.bottom:
