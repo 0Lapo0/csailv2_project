@@ -160,9 +160,11 @@ if st.button("clear history"):
     st.session_state.messages.clear()
 
 with st.bottom:
-    "lol"
-    question = st.text_input("wanna chat?")
-    with st.checkbox("lol"):
-        pass
-    with st.button("send"):
-        pass
+    col1, col2 = st.columns(2)
+    with col1:
+        question = st.text_input("wanna chat?")
+        if st.checkbox("lol"):
+            pass
+    with col2:
+        with st.button("send"):
+            pass
