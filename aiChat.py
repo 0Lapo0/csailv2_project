@@ -39,7 +39,7 @@ with (st.sidebar):
         st.session_state.processed = []
         st.session_state.used_files = []
         st.write("collection reset")
-        st.write(st.session_state.collection)
+        #st.write(st.session_state.collection)
 
     types = [
         "txt",
@@ -122,7 +122,7 @@ with (st.sidebar):
             st.session_state.processed = []
             st.session_state.used_files = []
             st.write("collection reset")
-            st.write(st.session_state.collection)
+            #st.write(st.session_state.collection)
 with st.bottom:
     col1, col2 = st.columns(2)
     fixed_question = ""
