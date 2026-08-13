@@ -161,3 +161,8 @@ if st.button("clear history"):
 
 with st.bottom:
     "lol"
+    question = st.text_input("wanna chat?")
+    with st.checkbox("lol"):
+        pass
+    with st.button("send"):
+        pass
