@@ -59,8 +59,8 @@ with st.sidebar:
         "pdf"
     ]
     files = st.file_uploader("give file", type=types, accept_multiple_files=True)
-    if files:
-        for file in files:
+    #if files:
+        #for file in files:
 #            st.write(file.name)
 #            st.write(file.type)
 #            if file.type == "text/plain":
