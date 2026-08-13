@@ -207,6 +207,9 @@ with st.bottom:
 #    if st.session_state.messages[-1]["role"] == "assistant":
 #        st.session_state.messages[-1]["content"]
 for message in st.session_state.messages:
-    if message["role"] != "system" and message["role"] != "tool":
+    if message["role"] == "assistant":
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
+    elif message["role"] == "user":
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"].split("QUESTION:\n", 1)[1])
