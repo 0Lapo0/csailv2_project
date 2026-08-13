@@ -98,8 +98,8 @@ with st.sidebar:
                     chunks = []
                     for i in range(0, len(text), st.session_state.step):
                         chunks.append(text[i: i + st.session_state.chunk_size])
-                    for x in chunks:
-                        x = f"from file: {file.name}: {x}"
+                    for i in range(len(chunks)):
+                        chunks[i] = f"from file: {file.name}: {chunks[i]}"
                     tags = [file.name + str(i) for i in range(len(chunks))] #add file labeling
                     collection = st.session_state.client.create_collection(file.name)
                     collection.add(documents=chunks, ids=tags)
