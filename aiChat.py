@@ -173,7 +173,7 @@ with st.bottom:
             if history:
                 response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages)
             else:
-                respose = client.chat.completions.create(model=MODEL, messages=messages)
+                response = client.chat.completions.create(model=MODEL, messages=messages)
             st.session_state.messages.append({"role":"assistant", "content":response.choices[0].message.content})
         st.write(fixed_question)
         if st.button("clear history"):
