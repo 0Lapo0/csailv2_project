@@ -201,7 +201,12 @@ with st.bottom:
             response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages)
             #st.write(response.choices[0].message.content)
             st.session_state.messages.append({"role":"assistant", "content":response.choices[0].message.content})
-with st.chat_message("user"):
-    st.session_state.question
-with st.chat_message("bot"):
-    st.session_state.messages[-1]["content"]
+#with st.chat_message("user"):
+#    st.session_state.question
+#with st.chat_message("bot"):
+#    if st.session_state.messages[-1]["role"] == "assistant":
+#        st.session_state.messages[-1]["content"]
+for message in st.session_state.messages:
+    if message["role"] != "system" and message["role"] != "tool":
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
