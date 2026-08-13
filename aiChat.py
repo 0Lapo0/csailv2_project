@@ -166,5 +166,6 @@ with st.bottom:
         if st.checkbox("lol"):
             pass
     with col2:
-        with st.button("send"):
+        st.space()
+        if st.button("send"):
             pass
