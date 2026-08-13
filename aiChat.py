@@ -133,11 +133,11 @@ with st.bottom:
                          {"role": "user",
                           "content": f"translate the following question to english if it is not already, and fix any major spelling mistakes: {question}"}]
             fixed_question = client.chat.completions.create(model=MODEL, messages=translate).choices[0].message.content
-            st.write(fixed_question)
+            #st.write(fixed_question)
             if st.button("clear history"):
                 st.session_state.messages.clear()
     with col2:
-        st.space()
+        st.write(fixed_question)
         if st.button("send") and question:
             if fix:
                 que = fixed_question
