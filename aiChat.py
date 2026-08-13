@@ -178,7 +178,8 @@ with st.bottom:
             else:
                 response = client.chat.completions.create(model=MODEL, messages=messages)
             st.session_state.messages.append({"role":"assistant", "content":response.choices[0].message.content})
-        st.write(fixed_question)
+        with st.expander("view fixed question"):
+            st.write(fixed_question)
         if st.button("clear history"):
             st.session_state.messages.clear()
 for message in st.session_state.messages:
