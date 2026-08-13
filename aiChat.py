@@ -163,9 +163,39 @@ with st.bottom:
     col1, col2 = st.columns(2)
     with col1:
         question = st.text_input("wanna chat?")
-        if st.checkbox("lol"):
-            pass
+        fix = st.checkbox("fix the question?")
+        if fix:
+            translate = [{"role": "system",
+                          "content": "if nothing is wrong do not change anything. do not add anything, just return the fixed question by itself. use the closest word when translating."},
+                         {"role": "user",
+                          "content": f"translate the following question to english if it is not already, and fix any major spelling mistakes: {question}"}]
+            fixed_question = client.chat.completions.create(model=MODEL, messages=translate).choices[0].message.content
+            st.write(fixed_question)
     with col2:
         st.space()
-        if st.button("send"):
-            pass
+        if st.button("send") and question:
+            if fix:
+                que = fixed_question
+            else:
+                que = question
+            st.write(que)
+            collection = st.session_state.collection
+            result = collection.query(query_texts=que, n_results=10)
+            # st.session_state.context = result["documents"][0][::-1] #add thresholding
+            st.session_state.context = []
+            for i in range(len(result["documents"][0])):
+                if result["distances"][0][i] < 1.4:
+                    st.session_state.context.append(result["documents"][0][i])
+            st.session_state.distances = result["distances"][0]
+            st.session_state.question = que
+            for ans in st.session_state.context:
+                st.write(ans)
+            st.write(st.session_state.distances)
+            context = "\n".join(st.session_state.context)
+            question = st.session_state.question
+            messages = [{"role": "system",
+                         "content": "Answer the user's question using only the provided document context.If the context contains enough information to answer, give the answer."},
+                        {"role": "user", "content": f"DOCUMENT CONTEXT:\n{context}\n\nQUESTION:\n{question}"}]
+            st.session_state.messages.append({"role": "user", "content": messages})
+            response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages)
+            st.write(response.choices[0].message.content)
