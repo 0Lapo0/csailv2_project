@@ -29,6 +29,8 @@ if "step" not in st.session_state:
     st.session_state.step = 0
 if "used_files" not in st.session_state:
     st.session_state.used_files = []
+if "processed" not in st.session_state:
+    st.session_state.processed = []
 with st.sidebar:
     old_over, old_size = st.session_state.overlap, st.session_state.chunk_size
     st.session_state.chunk_size = st.slider("chunk size", min_value=0, max_value=1000, value=400)
@@ -41,6 +43,7 @@ with st.sidebar:
         st.session_state.collection = None
         st.session_state.collection = st.session_state.client.create_collection("documents")
         st.session_state.collections = []
+        st.session_state.processed = []
         st.write("collection reset")
         st.write(st.session_state.collection)
 
@@ -69,63 +72,77 @@ with st.sidebar:
 #            st.write(file.type)
 #            if file.type == "text/plain":
 #                st.write(":skull:")
-    if files and st.button("process file"):
-        for file in files:
-            st.write("file processed")
-            t_types = {
-                "text/plain",
-                "text/markdown",
-                "text/x-rst",
-                "text/x-python",
-                "text/javascript",
-                "text/html",
-                "text/css",
-                "application/json",
-                "application/xml",
-                "text/csv",
-                "application/x-yaml",
-                "text/x-ini",
-                "image/svg+xml"
-            }
-            if file.type in t_types:
-                text = file.read().decode("utf-8")
-            elif file.type == "application/pdf":
-                reader = PdfReader(file)
-                text = ""
-                for page in reader.pages:
-                    text += page.extract_text() + "\n"
-            #highly customisable
-            chunks = []
-            print(len(text))
-            print(len(chunks))
-            #chunk_size = 200
-            #overlap = 50
-            #step = chunk_size - overlap
-            for i in range(0, len(text), st.session_state.step):
-                chunks.append(text[i: i + st.session_state.chunk_size])
-            print(len(chunks), "chunks: ")
-            for x in chunks:
-                print(x)
-            st.write(len(chunks))
-            tags = [file.name + str(i) for i in range(len(chunks))] #add file labeling
-            #st.session_state.collection.add(documents=chunks, ids=tags)
-            collection = st.session_state.client.create_collection(file.name)
-            collection.add(documents=chunks, ids=tags)
-            st.session_state.collections.append(collection)
-            st.write("chunks added")
+    c1, c2 = st.columns(2)
+    with c1:
+        if files and st.button("process file"):
+            for file in files:
+                if file.name not in st.session_state.processed:
+                    st.write("file processed")
+                    t_types = {
+                        "text/plain",
+                        "text/markdown",
+                        "text/x-rst",
+                        "text/x-python",
+                        "text/javascript",
+                        "text/html",
+                        "text/css",
+                        "application/json",
+                        "application/xml",
+                        "text/csv",
+                        "application/x-yaml",
+                        "text/x-ini",
+                        "image/svg+xml"
+                    }
+                    if file.type in t_types:
+                        text = file.read().decode("utf-8")
+                    elif file.type == "application/pdf":
+                        reader = PdfReader(file)
+                        text = ""
+                        for page in reader.pages:
+                            text += page.extract_text() + "\n"
+                    #highly customisable
+                    chunks = []
+                    print(len(text))
+                    print(len(chunks))
+                    #chunk_size = 200
+                    #overlap = 50
+                    #step = chunk_size - overlap
+                    for i in range(0, len(text), st.session_state.step):
+                        chunks.append(text[i: i + st.session_state.chunk_size])
+                    print(len(chunks), "chunks: ")
+                    for x in chunks:
+                        print(x)
+                    st.write(len(chunks))
+                    tags = [file.name + str(i) for i in range(len(chunks))] #add file labeling
+                    #st.session_state.collection.add(documents=chunks, ids=tags)
+                    collection = st.session_state.client.create_collection(file.name)
+                    collection.add(documents=chunks, ids=tags)
+                    st.session_state.collections.append(collection)
+                    st.session_state.processed.append(file.name)
+                    st.write("chunks added")
 
-    if files:
-        for collection in st.session_state.collections:
-            coll = collection.get()
-            if st.checkbox(f"use {collection.name}"):
-                if collection not in st.session_state.used_files:
-                    st.session_state.used_files.append(collection)
-                    st.session_state.collection.add(documents=coll["documents"], ids=coll["ids"])
-            else:
-                if collection in st.session_state.used_files:
-                    st.session_state.used_files.remove(collection)
-                    st.session_state.collection.delete(ids=coll["ids"])
-
+        if files:
+            for collection in st.session_state.collections:
+                coll = collection.get()
+                if st.checkbox(f"use {collection.name}"):
+                    if collection not in st.session_state.used_files:
+                        st.session_state.used_files.append(collection)
+                        st.session_state.collection.add(documents=coll["documents"], ids=coll["ids"])
+                else:
+                    if collection in st.session_state.used_files:
+                        st.session_state.used_files.remove(collection)
+                        st.session_state.collection.delete(ids=coll["ids"])
+    with c2:
+        if st.button("reset context memory"):
+            for collection in st.session_state.collections:
+                st.session_state.client.delete_collection(collection.name)
+            st.session_state.client.delete_collection("documents")
+            st.session_state.collection = None
+            st.session_state.collection = st.session_state.client.create_collection("documents")
+            st.session_state.collections = []
+            st.session_state.processed = []
+            st.write("collection reset")
+            st.write(st.session_state.collection)
 with st.bottom:
     col1, col2 = st.columns(2)
     fixed_question = ""
