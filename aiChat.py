@@ -153,7 +153,7 @@ with st.bottom:
                 que = question
             #st.write(que)
             collection = st.session_state.collection
-            result = collection.query(query_texts=que, n_results=10)
+            result = collection.query(query_texts=que, n_results=5)
             # st.session_state.context = result["documents"][0][::-1] #add thresholding
             st.session_state.context = []
             for i in range(len(result["documents"][0])):
