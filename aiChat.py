@@ -34,7 +34,6 @@ with (st.sidebar):
     if old_over != st.session_state.overlap or old_size != st.session_state.chunk_size:
         for collection in st.session_state.client.list_collections():
             st.session_state.client.delete_collection(collection.name)
-        st.session_state.client.delete_collection("documents")
         st.session_state.client.create_collection("documents")
         st.session_state.collections = []
         st.session_state.processed = []
@@ -115,9 +114,9 @@ with (st.sidebar):
                         st.session_state.client.get_collection(st.session_state.collection).delete(ids=coll["ids"])
     with c2:
         if st.button("reset context memory"):
-            for collection in st.session_state.collections:
-                st.session_state.client.delete_collection(collection)
-            st.session_state.client.delete_collection("documents")
+            for collection in st.session_state.client.list_collections():
+                st.session_state.client.delete_collection(collection.name)
+            #st.session_state.client.delete_collection("documents")
             st.session_state.client.create_collection("documents")
             st.session_state.collections = []
             st.session_state.processed = []
