@@ -6,16 +6,14 @@ API_KEY = st.secrets["GROQ_API_KEY"]
 client = Groq(api_key=API_KEY)
 models = ("openai/gpt-oss-120b", "llama-3.1-8b-instant", "llama-3.3-70b-versatile", "openai/gpt-oss-20b" )
 MODEL = st.sidebar.selectbox("choose model", models)
-# Initialize chat history
+# Initialize
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
 if "client" not in st.session_state:
     st.session_state.client = chromadb.Client()
-
 if "collection" not in st.session_state:
-    st.session_state.client.create_collection("documents")
-    st.session_state.collection = "documents"
+    c = st.session_state.client.create_collection("documents")
+    st.session_state.collection = c.name
 if "collections" not in st.session_state:
     st.session_state.collections = []
 if "overlap" not in st.session_state:
