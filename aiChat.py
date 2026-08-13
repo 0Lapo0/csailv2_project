@@ -5,7 +5,7 @@ from pypdf import PdfReader
 
 API_KEY = st.secrets["GROQ_API_KEY"]
 client = Groq(api_key=API_KEY)
-models = ("qwen2.5:0.5b", "qwen2.5:7b", "qwen2.5:3b")
+models = ("openai/gpt-oss-120b", "llama-3.1-8b-instant", "llama-3.3-70b-versatile", "openai/gpt-oss-20b" )
 MODEL = st.sidebar.selectbox("choose model", models)
 # Initialize chat history
 if "messages" not in st.session_state:
