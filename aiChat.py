@@ -65,13 +65,7 @@ with st.sidebar:
         "svg",
         "pdf"
     ]
-    files = st.file_uploader("give file", type=types, accept_multiple_files=True)
-    #if files:
-        #for file in files:
-#            st.write(file.name)
-#            st.write(file.type)
-#            if file.type == "text/plain":
-#                st.write(":skull:")
+    files = st.file_uploader("Upload file", type=types, accept_multiple_files=True)
     c1, c2 = st.columns(2)
     with c1:
         if files and st.button("process file"):
@@ -102,19 +96,11 @@ with st.sidebar:
                             text += page.extract_text() + "\n"
                     #highly customisable
                     chunks = []
-                    print(len(text))
-                    print(len(chunks))
-                    #chunk_size = 200
-                    #overlap = 50
-                    #step = chunk_size - overlap
                     for i in range(0, len(text), st.session_state.step):
                         chunks.append(text[i: i + st.session_state.chunk_size])
-                    print(len(chunks), "chunks: ")
                     for x in chunks:
-                        print(x)
-                    st.write(len(chunks))
+                        x = f"from file: {file.name}: {x}"
                     tags = [file.name + str(i) for i in range(len(chunks))] #add file labeling
-                    #st.session_state.collection.add(documents=chunks, ids=tags)
                     collection = st.session_state.client.create_collection(file.name)
                     collection.add(documents=chunks, ids=tags)
                     st.session_state.collections.append(collection)
