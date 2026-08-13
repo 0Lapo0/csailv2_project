@@ -106,7 +106,8 @@ with (st.sidebar):
 
         if len(st.session_state.collections) != 0:
             for collection in st.session_state.collections:
-                coll = st.session_state.client.get_collection(collection).get()                if st.checkbox(f"use {collection.name}", value=True):
+                coll = st.session_state.client.get_collection(collection).get()
+                if st.checkbox(f"use {collection}", value=True):
                     if collection not in st.session_state.used_files:
                         st.session_state.used_files.append(collection)
                         st.session_state.client.get_collection(st.session_state.collection).add(documents=coll["documents"], ids=coll["ids"])
