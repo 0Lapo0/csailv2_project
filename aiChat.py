@@ -196,6 +196,6 @@ with st.bottom:
             messages = [{"role": "system",
                          "content": "Answer the user's question using only the provided document context.If the context contains enough information to answer, give the answer."},
                         {"role": "user", "content": f"DOCUMENT CONTEXT:\n{context}\n\nQUESTION:\n{question}"}]
-            st.session_state.messages.append({"role": "user", "content": messages})
+            st.session_state.messages.append(messages[0:-1])
             response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages)
             st.write(response.choices[0].message.content)
