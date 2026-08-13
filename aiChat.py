@@ -14,11 +14,8 @@ if "client" not in st.session_state:
     st.session_state.client = chromadb.Client()
 
 if "collection" not in st.session_state:
-    try:
-        st.session_state.client.delete_collection("documents")
-    except:
-        pass
-    st.session_state.collection = st.session_state.client.create_collection("documents")
+    st.session_state.client.create_collection("documents")
+    st.session_state.collection = "documents"
 if "collections" not in st.session_state:
     st.session_state.collections = []
 if "overlap" not in st.session_state:
@@ -40,8 +37,7 @@ with (st.sidebar):
         for collection in st.session_state.client.list_collections():
             st.session_state.client.delete_collection(collection.name)
         st.session_state.client.delete_collection("documents")
-        st.session_state.collection = None
-        st.session_state.collection = st.session_state.client.create_collection("documents")
+        st.session_state.client.create_collection("documents")
         st.session_state.collections = []
         st.session_state.processed = []
         st.session_state.used_files = []
@@ -104,28 +100,26 @@ with (st.sidebar):
                     tags = [file.name + str(i) for i in range(len(chunks))] #add file labeling
                     collection = st.session_state.client.create_collection(file.name)
                     collection.add(documents=chunks, ids=tags)
-                    st.session_state.collections.append(collection)
+                    st.session_state.collections.append(collection.name)
                     st.session_state.processed.append(file.name)
                     st.toast("chunks added")
 
         if len(st.session_state.collections) != 0:
             for collection in st.session_state.collections:
-                coll = collection.get()
-                if st.checkbox(f"use {collection.name}", value=True):
+                coll = st.session_state.client.get_collection(collection).get()                if st.checkbox(f"use {collection.name}", value=True):
                     if collection not in st.session_state.used_files:
                         st.session_state.used_files.append(collection)
-                        st.session_state.collection.add(documents=coll["documents"], ids=coll["ids"])
+                        st.session_state.client.get_collection(st.session_state.collection).add(documents=coll["documents"], ids=coll["ids"])
                 else:
                     if collection in st.session_state.used_files:
                         st.session_state.used_files.remove(collection)
-                        st.session_state.collection.delete(ids=coll["ids"])
+                        st.session_state.client.get_collection(st.session_state.collection).delete(ids=coll["ids"])
     with c2:
         if st.button("reset context memory"):
             for collection in st.session_state.collections:
-                st.session_state.client.delete_collection(collection.name)
+                st.session_state.client.delete_collection(collection)
             st.session_state.client.delete_collection("documents")
-            st.session_state.collection = None
-            st.session_state.collection = st.session_state.client.create_collection("documents")
+            st.session_state.client.create_collection("documents")
             st.session_state.collections = []
             st.session_state.processed = []
             st.session_state.used_files = []
@@ -153,7 +147,7 @@ with st.bottom:
             else:
                 que = question
             #st.write(que)
-            collection = st.session_state.collection
+            collection = st.session_state.client.get_collection("documents")
             result = collection.query(query_texts=que, n_results=5)
             # st.session_state.context = result["documents"][0][::-1] #add thresholding
             st.session_state.context = []
