@@ -27,8 +27,8 @@ if "used_files" not in st.session_state:
     st.session_state.used_files = []
 with st.sidebar:
     old_over, old_size = st.session_state.overlap, st.session_state.chunk_size
-    st.session_state.chunk_size = st.slider("chunk size", min_value=0, max_value=1000)
-    st.session_state.overlap = st.slider("overlap", min_value=0, max_value=1000)
+    st.session_state.chunk_size = st.slider("chunk size", min_value=0, max_value=1000, value=400)
+    st.session_state.overlap = st.slider("overlap", min_value=0, max_value=1000, value=70)
     st.session_state.step = st.session_state.chunk_size - st.session_state.overlap
     if old_over != st.session_state.overlap or old_size != st.session_state.chunk_size:
         for collection in st.session_state.collections:
@@ -158,3 +158,6 @@ if st.button("search"):
     st.write(response.choices[0].message.content)
 if st.button("clear history"):
     st.session_state.messages.clear()
+
+with st.bottom:
+    "lol"
