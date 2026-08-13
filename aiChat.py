@@ -137,7 +137,7 @@ with st.bottom:
             if st.button("clear history"):
                 st.session_state.messages.clear()
     with col2:
-        st.empty()
+        st.space()
         if st.button("send") and question:
             if fix:
                 que = fixed_question
