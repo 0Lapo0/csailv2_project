@@ -2,7 +2,6 @@ import streamlit as st
 import chromadb
 from groq import Groq
 from pypdf import PdfReader
-
 API_KEY = st.secrets["GROQ_API_KEY"]
 client = Groq(api_key=API_KEY)
 models = ("openai/gpt-oss-120b", "llama-3.1-8b-instant", "llama-3.3-70b-versatile", "openai/gpt-oss-20b" )
@@ -38,7 +37,7 @@ with (st.sidebar):
     st.session_state.overlap = st.slider("overlap", min_value=0, max_value=1000, value=70)
     st.session_state.step = st.session_state.chunk_size - st.session_state.overlap
     if old_over != st.session_state.overlap or old_size != st.session_state.chunk_size:
-        for collection in st.session_state.collections:
+        for collection in st.session_state.client.list_collections():
             st.session_state.client.delete_collection(collection.name)
         st.session_state.client.delete_collection("documents")
         st.session_state.collection = None
