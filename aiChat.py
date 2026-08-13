@@ -121,10 +121,10 @@ with st.sidebar:
                     st.session_state.processed.append(file.name)
                     st.write("chunks added")
 
-        if files:
+        if len(st.session_state.collections) != 0:
             for collection in st.session_state.collections:
                 coll = collection.get()
-                if st.checkbox(f"use {collection.name}"):
+                if st.checkbox(f"use {collection.name}", value=True):
                     if collection not in st.session_state.used_files:
                         st.session_state.used_files.append(collection)
                         st.session_state.collection.add(documents=coll["documents"], ids=coll["ids"])
