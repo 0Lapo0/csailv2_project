@@ -167,7 +167,7 @@ with st.bottom:
             context = "\n".join(st.session_state.context)
             question = st.session_state.question
             messages = [{"role": "system",
-                         "content": "Answer the user's question using only the provided document context.If the context contains enough information to answer, give the answer. if asked also refer back to your previous answer but do not use any previous context as a source of information."},
+                         "content": "Answer the user's question using only the provided document context.If the context contains enough information to answer, give the answer. use previous answers as a way to understand the question, but do not use any previous context as a source to answer a question."},
                         {"role": "user", "content": f"DOCUMENT CONTEXT:\n{context}\n\nQUESTION:\n{question}"}]
             st.session_state.messages.append(messages[0])
             st.session_state.messages.append(messages[1])
