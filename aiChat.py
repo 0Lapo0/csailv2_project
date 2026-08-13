@@ -32,7 +32,7 @@ if "used_files" not in st.session_state:
     st.session_state.used_files = []
 if "processed" not in st.session_state:
     st.session_state.processed = []
-with st.sidebar:
+with (st.sidebar):
     old_over, old_size = st.session_state.overlap, st.session_state.chunk_size
     st.session_state.chunk_size = st.slider("chunk size", min_value=0, max_value=1000, value=400)
     st.session_state.overlap = st.slider("overlap", min_value=0, max_value=1000, value=70)
@@ -73,7 +73,7 @@ with st.sidebar:
         if files and st.button("process file"):
             for file in files:
                 if file.name not in st.session_state.processed:
-                    st.write("file processed")
+                    st.toast("file processed")
                     t_types = {
                         "text/plain",
                         "text/markdown",
@@ -107,7 +107,7 @@ with st.sidebar:
                     collection.add(documents=chunks, ids=tags)
                     st.session_state.collections.append(collection)
                     st.session_state.processed.append(file.name)
-                    st.write("chunks added")
+                    st.toast("chunks added")
 
         if len(st.session_state.collections) != 0:
             for collection in st.session_state.collections:
