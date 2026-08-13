@@ -156,7 +156,7 @@ with st.bottom:
             # st.session_state.context = result["documents"][0][::-1] #add thresholding
             st.session_state.context = []
             for i in range(len(result["documents"][0])):
-                if result["distances"][0][i] < 1.4:
+                if result["distances"][0][i] < 1.5:
                     st.session_state.context.append(result["documents"][0][i])
             st.session_state.distances = result["distances"][0]
             st.session_state.question = que
