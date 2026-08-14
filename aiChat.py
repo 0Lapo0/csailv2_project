@@ -136,7 +136,7 @@ with st.bottom:
     col1, col2 = st.columns(2)
     fixed_question = ""
     with col1:
-        question = st.text_input("wanna chat?")
+        question = st.text_input("ask a question")
         fix = st.checkbox("fix the question?")
         if fix:
             translate = [{"role": "system",
