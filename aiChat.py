@@ -139,7 +139,7 @@ with st.bottom:
         history = st.checkbox("use chat history? (might take longer to asnwer)")
         if history:
             h_amount = (len(st.session_state.messages)+2) - st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+2)
-            h_amount
+            #h_amount
     with col2:
         st.space()
         if st.button("send") and question:
@@ -180,10 +180,10 @@ with st.bottom:
             st.session_state.messages.append(messages[0])
             st.session_state.messages.append(messages[1])
             if history:
-                h_amount
-                len(st.session_state.messages)
-                st.session_state.messages[h_amount]
-                #response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages[h_amount:len(st.session_state.messages)+1])
+                #h_amount
+                #len(st.session_state.messages)
+                #st.session_state.messages[h_amount]
+                response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages[h_amount:len(st.session_state.messages)+1])
             else:
                 response = client.chat.completions.create(model=MODEL, messages=messages)
             st.session_state.messages.append({"role":"assistant", "content":response.choices[0].message.content})
