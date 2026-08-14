@@ -138,11 +138,12 @@ with st.bottom:
                           "content": f"translate the following question to english if it is not already, and fix any major spelling mistakes: {question}"}]
             fixed_question = client.chat.completions.create(model=MODEL, messages=translate).choices[0].message.content
             #st.write(fixed_question)
-        history = st.checkbox("use chat history? (might take longer to asnwer)")
-        if history:
-            val = st.session_state.h_amount
-            st.session_state.h_amount = (len(st.session_state.messages)+2) - st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+2, value=val)
-            #h_amount
+        if len(st.session_state.messages) > 0:
+            history = st.checkbox("use chat history? (might take longer to asnwer)")
+            if history:
+                val = st.session_state.h_amount
+                st.session_state.h_amount = (len(st.session_state.messages)+2) - st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+2, value=val)
+                #h_amount
     with col2:
         st.space()
         if st.button("send") and question:
