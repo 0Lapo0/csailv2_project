@@ -2,6 +2,11 @@ import streamlit as st
 import chromadb
 from groq import Groq
 from pypdf import PdfReader
+#import os
+#from dotenv import load_dotenv
+#
+#load_dotenv()
+#API_KEY = os.getenv("GROQ_API_KEY")
 API_KEY = st.secrets["GROQ_API_KEY"]
 client = Groq(api_key=API_KEY)
 models = ("openai/gpt-oss-120b", "llama-3.1-8b-instant", "llama-3.3-70b-versatile", "openai/gpt-oss-20b" )
@@ -141,13 +146,17 @@ with st.bottom:
         if len(st.session_state.messages) > 0:
             history = st.checkbox("use chat history? (might take longer to asnwer)")
             if history:
-                val = st.session_state.h_amount
-                new = (len(st.session_state.messages)+2) - st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+2, value=val)
-                st.session_state.h_amount = new
-                new
+                try:
+                    val = st.session_state.new
+                except:
+                    val = 1
+                st.session_state.new = st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+2, value=val)
+                st.session_state.h_amount = (len(st.session_state.messages)+2) -  st.session_state.new
+                st.session_state.new
                 val
         else:
             history = False
+            st.session_state.h_amount = 0
     with col2:
         st.space()
         if st.button("send") and question:
