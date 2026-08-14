@@ -142,8 +142,10 @@ with st.bottom:
             history = st.checkbox("use chat history? (might take longer to asnwer)")
             if history:
                 val = st.session_state.h_amount
-                st.session_state.h_amount = (len(st.session_state.messages)+2) - st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+2, value=val)
-                #h_amount
+                new = (len(st.session_state.messages)+2) - st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+2, value=val)
+                st.session_state.h_amount = new
+                new
+                val
         else:
             history = False
     with col2:
