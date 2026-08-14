@@ -31,7 +31,7 @@ if "used_files" not in st.session_state:
 if "processed" not in st.session_state:
     st.session_state.processed = []
 if "h_amount" not in st.session_state:
-    st.session_state.h_amount = 0
+    st.session_state.h_amount = 1
 def rest_con():
     for collection in st.session_state.client.list_collections():
         st.session_state.client.delete_collection(collection.name)
@@ -140,7 +140,8 @@ with st.bottom:
             #st.write(fixed_question)
         history = st.checkbox("use chat history? (might take longer to asnwer)")
         if history:
-            st.session_state.h_amount = (len(st.session_state.messages)+2) - st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+2, value=st.session_state.h_amount)
+            val = st.session_state.h_amount
+            st.session_state.h_amount = (len(st.session_state.messages)+2) - st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+2, value=val)
             #h_amount
     with col2:
         st.space()
