@@ -31,7 +31,7 @@ if "used_files" not in st.session_state:
 if "processed" not in st.session_state:
     st.session_state.processed = []
 if "h_amount" not in st.session_state:
-    st.session_state.h_amount = 15
+    st.session_state.h_amount = 0
 def rest_con():
     for collection in st.session_state.client.list_collections():
         st.session_state.client.delete_collection(collection.name)
