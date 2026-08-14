@@ -2,12 +2,12 @@ import streamlit as st
 import chromadb
 from groq import Groq
 from pypdf import PdfReader
-#import os
-#from dotenv import load_dotenv
-#
-#load_dotenv()
-#API_KEY = os.getenv("GROQ_API_KEY")
-API_KEY = st.secrets["GROQ_API_KEY"]
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+API_KEY = os.getenv("GROQ_API_KEY")
+#API_KEY = st.secrets["GROQ_API_KEY"]
 client = Groq(api_key=API_KEY)
 models = ("openai/gpt-oss-120b", "llama-3.1-8b-instant", "llama-3.3-70b-versatile", "openai/gpt-oss-20b" )
 MODEL = st.sidebar.selectbox("choose model", models)
@@ -50,6 +50,8 @@ with (st.sidebar):
     old_over, old_size = st.session_state.overlap, st.session_state.chunk_size
     st.session_state.chunk_size = st.slider("chunk size", min_value=0, max_value=1000, value=400)
     st.session_state.overlap = st.slider("overlap", min_value=0, max_value=1000, value=70)
+    if st.session_state.overlap >= st.session_state.chunk_size:
+        st.session_state.overlap = st.session_state.chunk_size -1
     st.session_state.step = st.session_state.chunk_size - st.session_state.overlap
     if old_over != st.session_state.overlap or old_size != st.session_state.chunk_size:
         rest_con()
@@ -152,8 +154,8 @@ with st.bottom:
                     val = 1
                 st.session_state.new = st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+2, value=val)
                 st.session_state.h_amount = (len(st.session_state.messages)+2) -  st.session_state.new
-                st.session_state.new
-                val
+                #st.session_state.new
+                #val
         else:
             history = False
             st.session_state.h_amount = 0
