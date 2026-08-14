@@ -185,7 +185,7 @@ with st.bottom:
                 #h_amount
                 #len(st.session_state.messages)
                 #st.session_state.messages[h_amount]
-                response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages[h_amount:len(st.session_state.messages)+1])
+                response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages[st.session_state.h_amount:len(st.session_state.messages)+1])
             else:
                 response = client.chat.completions.create(model=MODEL, messages=messages)
             st.session_state.messages.append({"role":"assistant", "content":response.choices[0].message.content})
