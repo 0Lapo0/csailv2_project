@@ -30,21 +30,22 @@ if "used_files" not in st.session_state:
     st.session_state.used_files = []
 if "processed" not in st.session_state:
     st.session_state.processed = []
+def rest_con():
+    for collection in st.session_state.client.list_collections():
+        st.session_state.client.delete_collection(collection.name)
+    st.session_state.client.create_collection("documents")
+    st.session_state.collections = []
+    st.session_state.processed = []
+    st.session_state.used_files = []
+    st.toast("collection reset")
+    st.rerun()
 with (st.sidebar):
     old_over, old_size = st.session_state.overlap, st.session_state.chunk_size
     st.session_state.chunk_size = st.slider("chunk size", min_value=0, max_value=1000, value=400)
     st.session_state.overlap = st.slider("overlap", min_value=0, max_value=1000, value=70)
     st.session_state.step = st.session_state.chunk_size - st.session_state.overlap
     if old_over != st.session_state.overlap or old_size != st.session_state.chunk_size:
-        for collection in st.session_state.client.list_collections():
-            st.session_state.client.delete_collection(collection.name)
-        st.session_state.client.create_collection("documents")
-        st.session_state.collections = []
-        st.session_state.processed = []
-        st.session_state.used_files = []
-        st.toast("collection reset")
-        st.rerun()
-        #st.write(st.session_state.collection)
+        rest_con()
 
     types = [
         "txt",
@@ -105,30 +106,23 @@ with (st.sidebar):
                     st.session_state.collections.append(collection.name)
                     st.session_state.processed.append(file.name)
                     st.toast("chunks added")
-
-        if len(st.session_state.collections) != 0:
-            for collection in st.session_state.collections:
-                coll = st.session_state.client.get_collection(collection).get()
-                if st.checkbox(f"use {collection}", value=True):
-                    if collection not in st.session_state.used_files:
-                        st.session_state.used_files.append(collection)
-                        st.session_state.client.get_collection(st.session_state.collection).add(documents=coll["documents"], ids=coll["ids"])
-                else:
-                    if collection in st.session_state.used_files:
-                        st.session_state.used_files.remove(collection)
-                        st.session_state.client.get_collection(st.session_state.collection).delete(ids=coll["ids"])
+        try:
+            if len(st.session_state.collections) != 0:
+                for collection in st.session_state.collections:
+                    coll = st.session_state.client.get_collection(collection).get()
+                    if st.checkbox(f"use {collection}", value=True):
+                        if collection not in st.session_state.used_files:
+                            st.session_state.used_files.append(collection)
+                            st.session_state.client.get_collection(st.session_state.collection).add(documents=coll["documents"], ids=coll["ids"])
+                    else:
+                        if collection in st.session_state.used_files:
+                            st.session_state.used_files.remove(collection)
+                            st.session_state.client.get_collection(st.session_state.collection).delete(ids=coll["ids"])
+        except:
+            rest_con()
     with c2:
         if st.button("reset context memory"):
-            for collection in st.session_state.client.list_collections():
-                st.session_state.client.delete_collection(collection.name)
-            #st.session_state.client.delete_collection("documents")
-            st.session_state.client.create_collection("documents")
-            st.session_state.collections = []
-            st.session_state.processed = []
-            st.session_state.used_files = []
-            st.toast("collection reset")
-            #st.write(st.session_state.collection)
-            st.rerun()
+            rest_con()
 with st.bottom:
     col1, col2 = st.columns(2)
     fixed_question = ""
