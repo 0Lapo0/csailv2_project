@@ -188,6 +188,6 @@ for message in st.session_state.messages:
             st.markdown(message["content"].split("QUESTION:\n", 1)[1])
 
 chat = st.session_state.messages
-chat.append({"role":"system", "content":"summarize the entire chat history except this message. make clear what was send by user and what by the assistant. shorten it to a very short text"})
+chat.append({"role":"system", "content":"summarize the entire chat history except this message. make clear what was send by user and what by the assistant. do not leave anything out of the summary and make it plain text only"})
 suma = client.chat.completions.create(model=MODEL, messages=chat)
 suma.choices[0].message.content
