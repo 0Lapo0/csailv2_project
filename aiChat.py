@@ -180,6 +180,9 @@ with st.bottom:
             st.session_state.messages.append(messages[0])
             st.session_state.messages.append(messages[1])
             if history:
+                h_amount
+                len(st.session_state.messages)
+                st.session_state.messages[h_amount+1]
                 response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages[h_amount:len(st.session_state.messages)+1])
             else:
                 response = client.chat.completions.create(model=MODEL, messages=messages)
