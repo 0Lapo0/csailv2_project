@@ -3,8 +3,8 @@ final project for circuit stream ai &amp; maschine learning using python lv2. 20
 
 AI chatbot
 # features
-rag system \n
-adjustable chunking \n
-file upload and selection \n
-chat history toggle \n
-fixing/translating questions {\n}
+rag system\
+adjustable chunking\
+file upload and selection\
+chat history toggle and adjustable length\
+fixing/translating questions
