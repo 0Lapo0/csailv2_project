@@ -187,5 +187,5 @@ for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"].split("QUESTION:\n", 1)[1])
 
-suma = client.chat.completions.create(model=MODEL, messages=st.session_state.messages + {"role"="system", "content":"summarize the entire chat history except this message"})
+suma = client.chat.completions.create(model=MODEL, messages=st.session_state.messages + {"role":"system", "content":"summarize the entire chat history except this message"})
 suma
