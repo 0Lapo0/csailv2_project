@@ -138,7 +138,7 @@ with st.bottom:
             #st.write(fixed_question)
         history = st.checkbox("use chat history? (might take longer to asnwer)")
         if history:
-            h_amount = (len(st.session_state.messages)+3) - st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+3)
+            h_amount = (len(st.session_state.messages)+2) - st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+2)
             h_amount
     with col2:
         st.space()
@@ -182,7 +182,7 @@ with st.bottom:
             if history:
                 h_amount
                 len(st.session_state.messages)
-                st.session_state.messages[h_amount+1]
+                st.session_state.messages[h_amount]
                 #response = client.chat.completions.create(model=MODEL, messages=st.session_state.messages[h_amount:len(st.session_state.messages)+1])
             else:
                 response = client.chat.completions.create(model=MODEL, messages=messages)
