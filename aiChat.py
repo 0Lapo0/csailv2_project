@@ -151,7 +151,19 @@ with st.bottom:
             else:
                 que = question
             #st.write(que)
-            collection = st.session_state.client.get_collection("documents")
+            try:
+                collection = st.session_state.client.get_collection("documents")
+            except:
+                for collection in st.session_state.client.list_collections():
+                    st.session_state.client.delete_collection(collection.name)
+                # st.session_state.client.delete_collection("documents")
+                st.session_state.client.create_collection("documents")
+                st.session_state.collections = []
+                st.session_state.processed = []
+                st.session_state.used_files = []
+                st.toast("collection reset")
+                # st.write(st.session_state.collection)
+                st.rerun()
             result = collection.query(query_texts=que, n_results=5)
             # st.session_state.context = result["documents"][0][::-1] #add thresholding
             st.session_state.context = []
