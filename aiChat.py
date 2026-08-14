@@ -190,4 +190,4 @@ for message in st.session_state.messages:
 chat = st.session_state.messages
 chat.append({"role":"system", "content":"summarize the entire chat history except this message"})
 suma = client.chat.completions.create(model=MODEL, messages=chat)
-suma
+suma.choices[0].message.content
