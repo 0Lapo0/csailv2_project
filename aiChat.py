@@ -139,6 +139,7 @@ with st.bottom:
         history = st.checkbox("use chat history? (might take longer to asnwer)")
         if history:
             h_amount = (len(st.session_state.messages)+3) - st.slider("how much history?", min_value=1, max_value=len(st.session_state.messages)+3)
+            h_amount
     with col2:
         st.space()
         if st.button("send") and question:
